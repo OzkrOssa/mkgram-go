@@ -1,2 +1,4 @@
 github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1 h1:wG8n/XJQ07TmjbITcGiUaOtXxdrINDz1b0J1w0SzqDc=
 github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1/go.mod h1:A2S0CWkNylc2phvKXWBBdD3K0iGnDBGbzRpISP2zBl8=
+gopkg.in/routeros.v2 v2.0.0-20190905230420-1bbf141cdd91 h1:RqTijcxlh3kwSEx4M1YfVoIBgA6rFO632PIOIjXAbz4=
+gopkg.in/routeros.v2 v2.0.0-20190905230420-1bbf141cdd91/go.mod h1:dXYL5YdVb9GEWLoWK8VHdwL/SuFrNyb/hj2/CXZVT7E=

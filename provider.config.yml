@@ -1,0 +1,10 @@
+providers:
+  - name: UNE
+    loca_address: 10.8.8.10
+    wan: ether1
+  - name: LUMEN RIOSUCIO
+    local_address: 10.8.8.6
+    wan: sfp-sfpplus1
+  - nombre: LUMEN SUPIA
+    local_address: 172.16.201.158
+    wan: sfp-sfpplus1

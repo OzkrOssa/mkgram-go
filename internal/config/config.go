@@ -1,7 +1,40 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+	"path/filepath"
+
+	"gopkg.in/yaml.v3"
+)
 
 var BotToken = os.Getenv("TELEGRAM_BOT_TOKEN")
 
 const GroupChatID int64 = -865707097
+
+type ProviderData struct {
+	Name         string `yaml:"name"`
+	LocalAddress string `yaml:"local_address"`
+	WAN          string `yaml:"wan"`
+}
+
+type ProviderConfig struct {
+	Providers []ProviderData `yaml:"providers"`
+}
+
+func LoadConfig() (ProviderConfig, error) {
+	log.Println("Reading configuration file")
+	filename, _ := filepath.Abs("../provider.config.yml")
+	yamlFile, err := os.ReadFile(filename)
+	if err != nil {
+		return ProviderConfig{}, err
+	}
+
+	var config ProviderConfig
+	err = yaml.Unmarshal(yamlFile, &config)
+	if err != nil {
+		return ProviderConfig{}, err
+	}
+
+	return config, nil
+}

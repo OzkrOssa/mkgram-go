@@ -8,7 +8,8 @@ type CommandHandler struct {
 func (ch CommandHandler) HandlerCommands(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 	if update.Message.IsCommand() {
 		commands := map[string]Command{
-			"start": &StartCommand{},
+			"start":      &startCommand{},
+			"provedores": &internetProviderCommand{},
 		}
 
 		command := update.Message.Command()

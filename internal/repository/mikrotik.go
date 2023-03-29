@@ -8,25 +8,19 @@ import (
 
 //TODO:Implement custom errors
 
-type Interface struct {
-	Name string
-}
-
 type Resources struct {
-	cpu    string
-	uptime string
-	err    error
+	Cpu    string
+	Uptime string
 }
 
 type Traffic struct {
-	rx  string
-	tx  string
-	err error
+	Rx string
+	Tx string
 }
 
 type MikrotikRepository interface {
-	GetTraffic(interfaceName Interface) Traffic
-	GetResources() Resources
+	GetTraffic(i string) (Traffic, error)
+	GetResources() (Resources, error)
 	GetIndentity() (string, error)
 }
 
@@ -55,7 +49,7 @@ func (r *mikrotikRepository) GetIndentity() (string, error) {
 		return "", err
 	}
 
-	defer r.client.Close()
+	//defer r.client.Close()
 
 	var name string
 
@@ -66,38 +60,40 @@ func (r *mikrotikRepository) GetIndentity() (string, error) {
 	return name, nil
 }
 
-func (r *mikrotikRepository) GetTraffic(interfaceName Interface) Traffic {
+func (r *mikrotikRepository) GetTraffic(i string) (Traffic, error) {
 
-	traffic, err := r.client.Run("/interface/monitor-traffic", "=interface="+interfaceName.Name, "=once")
+	traffic, err := r.client.Run("/interface/monitor-traffic", "=interface="+i, "=once")
 
 	if err != nil {
-		return Traffic{"", "", err}
+		return Traffic{"", ""}, err
 	}
+
+	//defer r.client.Close()
 
 	var rx, tx string
 
 	for _, x := range traffic.Re {
-		rx = x.Map["tx-bits-per-second"]
+		rx = x.Map["rx-bits-per-second"]
 		tx = x.Map["tx-bits-per-second"]
 	}
 
-	return Traffic{rx, tx, nil}
+	return Traffic{rx, tx}, nil
 
 }
 
-func (r *mikrotikRepository) GetResources() Resources {
-	resources, err := r.client.Run("/system/resources/print")
+func (r *mikrotikRepository) GetResources() (Resources, error) {
+	resources, err := r.client.Run("/system/resource/print")
 
 	if err != nil {
-		return Resources{"", "", nil}
+		return Resources{"", ""}, err
 	}
 
 	var cpu, uptime string
 
 	for _, x := range resources.Re {
-		cpu = x.Map["cpu-load"] + "%"
+		cpu = x.Map["cpu-load"]
 		uptime = x.Map["uptime"]
 	}
 
-	return Resources{cpu, uptime, nil}
+	return Resources{cpu, uptime}, nil
 }

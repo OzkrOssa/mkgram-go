@@ -5,9 +5,9 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-type StartCommand struct{}
+type startCommand struct{}
 
-func (sc StartCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
+func (sc startCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 	//TODO: add custom message to show all bot commands
 	startText := "Welcome to Red Planet"
 	message := tgbotapi.NewMessage(config.GroupChatID, startText)

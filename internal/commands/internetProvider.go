@@ -75,7 +75,7 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 
 		log.Println(ch.Name, ch.Resources, ch.Traffic)
 		textMessage := fmt.Sprintf("<b>%s</b>\n<b><i>Cpu:</i></b> %s <b><i>Uptime:</i></b> %s\n<b><i>Rx:</i></b> %s <b><i>Tx:</i></b> %s", ch.Name, ch.Resources.Cpu, ch.Resources.Uptime, utils.FormatSize(int64(rx)), utils.FormatSize(int64(tx)))
-		message = tgbotapi.NewMessage(config.GroupChatID, textMessage)
+		message = tgbotapi.NewMessage(update.Message.Chat.ID, textMessage)
 		message.ParseMode = "Html"
 		_, err = bot.Send(message)
 	}

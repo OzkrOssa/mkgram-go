@@ -23,7 +23,7 @@ func NewTrafficMonitor(bot *tgbotapi.BotAPI) *TrafficMonitor {
 
 func (tm *TrafficMonitor) CheckTraffic() {
 	providerConfig, err := config.LoadConfig()
-	resultsChan := make(chan repository.Traffic, len(providerConfig.Providers))
+	resultsChanTraffic := make(chan repository.Traffic, len(providerConfig.Providers))
 	if err != nil {
 		log.Println(err)
 	}
@@ -43,7 +43,7 @@ func (tm *TrafficMonitor) CheckTraffic() {
 				log.Println(err)
 			}
 
-			resultsChan <- traffic
+			resultsChanTraffic <- traffic
 
 			Rx, err := strconv.Atoi(traffic.Rx)
 
@@ -59,7 +59,7 @@ func (tm *TrafficMonitor) CheckTraffic() {
 				message.ParseMode = "Html"
 				tm.bot.Send(message)
 			case int64(Rx) < 100000000:
-				textMessage := fmt.Sprintf("❌ Cayo el trafico a menos de <b><i>%s</i></b> en <b><i>%s</i></b> ❌", utils.FormatSize(int64(Rx)), p.Name)
+				textMessage := fmt.Sprintf("❌ El Trafico cayo a <b><i>%s</i></b> en <b><i>%s</i></b> ❌", utils.FormatSize(int64(Rx)), p.Name)
 				message := tgbotapi.NewMessage(config.GroupChatID, textMessage)
 				message.ParseMode = "Html"
 				tm.bot.Send(message)
@@ -68,7 +68,7 @@ func (tm *TrafficMonitor) CheckTraffic() {
 	}
 	go func() {
 		time.Sleep(time.Second)
-		close(resultsChan)
+		close(resultsChanTraffic)
 	}()
 }
 

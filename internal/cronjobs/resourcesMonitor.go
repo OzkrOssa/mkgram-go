@@ -22,7 +22,7 @@ func NewResourcesMonitor(bot *tgbotapi.BotAPI) *ResourcesMonitor {
 
 func (tm *ResourcesMonitor) CheckResources() {
 	providerConfig, err := config.LoadConfig()
-	resultsChan := make(chan repository.Resources, len(providerConfig.Providers))
+	resultsChanResources := make(chan repository.Resources, len(providerConfig.Providers))
 	if err != nil {
 		log.Println(err)
 	}
@@ -42,7 +42,7 @@ func (tm *ResourcesMonitor) CheckResources() {
 				log.Println(err)
 			}
 
-			resultsChan <- resources
+			resultsChanResources <- resources
 
 			cpu, err := strconv.Atoi(resources.Cpu)
 
@@ -50,7 +50,7 @@ func (tm *ResourcesMonitor) CheckResources() {
 				log.Println(err)
 			}
 
-			if cpu > 70 {
+			if cpu > 10 {
 				log.Printf("Current CPU load: %d", cpu)
 				textMessage := fmt.Sprintf("⚡ La CPU en <b><i>%s</i></b> supero el <b><i>%d</i></b> ⚡", p.Name, cpu)
 				message := tgbotapi.NewMessage(config.GroupChatID, textMessage)
@@ -61,7 +61,7 @@ func (tm *ResourcesMonitor) CheckResources() {
 	}
 	go func() {
 		time.Sleep(time.Second)
-		close(resultsChan)
+		close(resultsChanResources)
 	}()
 }
 

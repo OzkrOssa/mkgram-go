@@ -16,6 +16,7 @@ type ProviderData struct {
 	Name         string `yaml:"name"`
 	LocalAddress string `yaml:"local_address"`
 	WAN          string `yaml:"wan"`
+	Saturation   int64  `yaml:"saturation"`
 }
 
 type ProviderConfig struct {

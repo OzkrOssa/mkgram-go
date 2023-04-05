@@ -50,7 +50,7 @@ func (tm *ResourcesMonitor) CheckResources() {
 				log.Println(err)
 			}
 
-			if cpu > 10 {
+			if cpu > 70 {
 				log.Printf("Current CPU load: %d", cpu)
 				textMessage := fmt.Sprintf("⚡ La CPU en <b><i>%s</i></b> supero el <b><i>%d</i></b> ⚡", p.Name, cpu)
 				message := tgbotapi.NewMessage(config.GroupChatID, textMessage)

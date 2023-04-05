@@ -1,5 +1,5 @@
 providers:
-  - name: UNE_1G_SER_244912
+  - name: UNE_1G_SER_264912
     local_address: 10.8.8.10
     wan: ether1
     saturation: 1000000000 # 950MB

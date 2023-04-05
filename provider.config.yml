@@ -1,8 +1,8 @@
 providers:
-  - name: UNE_1G_SER_244912
+  - name: UNE_1G_SER_264912
     local_address: 10.8.8.10
     wan: ether1
-    saturation: 950000000
+    saturation: 1000000000
   - name: LUMEN_RIOSUCIO_2G_ID:81-1V9YEMV
     local_address: 10.8.8.6
     wan: sfp-sfpplus1
@@ -10,4 +10,4 @@ providers:
   - name: LUMEN_SUPIA_1G_ID:81-2V79WV3
     local_address: 172.16.201.158
     wan: sfp-sfpplus1
-    saturation: 950000000
+    saturation: 1000000000 # 950MB

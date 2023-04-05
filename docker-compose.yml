@@ -1,0 +1,9 @@
+version: '3'
+services:
+  bot:
+    build: .
+    image: mkgram-go
+    container_name: mkgram
+    restart: always
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}

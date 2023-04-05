@@ -25,7 +25,7 @@ type ProviderConfig struct {
 
 func LoadConfig() (ProviderConfig, error) {
 	log.Println("Reading configuration file")
-	filename, _ := filepath.Abs("../provider.config.yml")
+	filename, _ := filepath.Abs("./provider.config.yml")
 	yamlFile, err := os.ReadFile(filename)
 	if err != nil {
 		return ProviderConfig{}, err

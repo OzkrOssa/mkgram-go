@@ -17,7 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	bot.Debug = true
+	bot.Debug = false
 
 	u := tgbotapi.NewUpdate(0)
 
@@ -26,6 +26,7 @@ func main() {
 	updates := bot.GetUpdatesChan(u)
 
 	commandHandler := commands.CommandHandler{}
+	callbackQueryHandler := commands.CallbackQueryHandler{}
 
 	//-------------JOBS-------------------//
 	cronjobs.StartTrafficMonitorJob(bot)
@@ -38,6 +39,12 @@ func main() {
 				log.Println(err)
 			}
 
+		} else if update.CallbackQuery != nil {
+			err := callbackQueryHandler.HandlerCallbackQuery(bot, &update)
+			log.Println(update.CallbackQuery.Data)
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}
 

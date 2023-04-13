@@ -22,7 +22,7 @@ func NewTrafficMonitor(bot *tgbotapi.BotAPI) *TrafficMonitor {
 }
 
 func (tm *TrafficMonitor) CheckTraffic() {
-	providerConfig, err := config.LoadConfig()
+	providerConfig, err := config.LoadProviderConfig()
 	resultsChanTraffic := make(chan repository.Traffic, len(providerConfig.Providers))
 	if err != nil {
 		log.Println(err)

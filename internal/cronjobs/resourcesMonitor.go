@@ -21,7 +21,7 @@ func NewResourcesMonitor(bot *tgbotapi.BotAPI) *ResourcesMonitor {
 }
 
 func (tm *ResourcesMonitor) CheckResources() {
-	providerConfig, err := config.LoadConfig()
+	providerConfig, err := config.LoadProviderConfig()
 	resultsChanResources := make(chan repository.Resources, len(providerConfig.Providers))
 	if err != nil {
 		log.Println(err)

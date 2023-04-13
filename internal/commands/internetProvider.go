@@ -23,7 +23,7 @@ type ProviderResult struct {
 
 func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 
-	providerConfig, err := config.LoadConfig()
+	providerConfig, err := config.LoadProviderConfig()
 
 	resultsChan := make(chan ProviderResult, len(providerConfig.Providers))
 

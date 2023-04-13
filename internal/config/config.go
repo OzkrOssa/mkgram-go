@@ -23,8 +23,18 @@ type ProviderConfig struct {
 	Providers []ProviderData `yaml:"providers"`
 }
 
-func LoadConfig() (ProviderConfig, error) {
-	log.Println("Reading configuration file")
+type BtsData struct {
+	Name         string `yaml:"name"`
+	LocalAddress string `yaml:"local_address"`
+	WAN          string `yaml:"wan"`
+}
+
+type BtsConfig struct {
+	Bts []BtsData `yaml:"bts"`
+}
+
+func LoadProviderConfig() (ProviderConfig, error) {
+	log.Println("Reading provider configuration file")
 	filename, _ := filepath.Abs("../provider.config.yml")
 	yamlFile, err := os.ReadFile(filename)
 	if err != nil {
@@ -35,6 +45,23 @@ func LoadConfig() (ProviderConfig, error) {
 	err = yaml.Unmarshal(yamlFile, &config)
 	if err != nil {
 		return ProviderConfig{}, err
+	}
+
+	return config, nil
+}
+
+func LoadBtsConfig() (BtsConfig, error) {
+	log.Println("Reading bts configuration file")
+	filename, _ := filepath.Abs("../bts.config.yml")
+	yamlFile, err := os.ReadFile(filename)
+	if err != nil {
+		return BtsConfig{}, err
+	}
+
+	var config BtsConfig
+	err = yaml.Unmarshal(yamlFile, &config)
+	if err != nil {
+		return BtsConfig{}, err
 	}
 
 	return config, nil

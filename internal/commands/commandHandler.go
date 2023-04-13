@@ -10,6 +10,7 @@ func (ch CommandHandler) HandlerCommands(bot *tgbotapi.BotAPI, update *tgbotapi.
 		commands := map[string]Command{
 			"start":      &startCommand{},
 			"provedores": &internetProviderCommand{},
+			"bts":        &BtsCommand{},
 		}
 
 		command := update.Message.Command()

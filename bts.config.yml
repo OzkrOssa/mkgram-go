@@ -1,0 +1,43 @@
+bts:
+  #INALAMBRICO
+  - name: BTS_Moron
+    local_address: 10.99.99.13
+    wan: ether2
+  - name: BTS_Tabuyo
+    local_address: 10.99.99.12
+    wan: ether2
+  - name: BTS_Calera
+    local_address: 10.99.99.18
+    wan: ether1
+  - name: BTS_Blandon
+    local_address: 10.99.99.10
+    wan: ether1
+  - name: BTS_Iberia
+    local_address: 10.99.99.5
+    wan: ether1
+  - name: BTS_Clavijo
+    local_address: 10.99.99.23
+    wan: ether1
+  - name: BTS_Pueblo_Viejo
+    local_address: 10.99.99.20
+    wan: ether1
+  - name: BTS_Cruces
+    local_address: 10.99.99.21
+    wan: ether1
+  - name: BTS_Guamal
+    local_address: 10.10.130.2
+    wan: ether1
+  - name: BTS_Cabuyal
+    local_address: 10.10.129.4
+    wan: ether1
+  - name: BTS_Irra
+    local_address: 172.16.254.10
+    wan: ether1
+
+  #FIBRA
+  - name: BTS_Irra_200
+    local_address: 172.16.254.11
+    wan: ether1
+  - name: BTS_SL_200
+    local_address: 172.16.201.157
+    wan: ether2

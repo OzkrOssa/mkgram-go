@@ -7,3 +7,5 @@ services:
     restart: always
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_USER: ${TELEGRAM_USER}
+      TELEGRAM_PASSWORD: ${TELEGRAM_PASSWORD}

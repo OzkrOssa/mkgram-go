@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"time"
+	"sync"
 
 	"github.com/OzkrOssa/mkgram-go/internal/utils"
 
@@ -22,7 +22,7 @@ type ProviderResult struct {
 }
 
 func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
-
+	var wg sync.WaitGroup
 	providerConfig, err := config.LoadProviderConfig()
 
 	resultsChan := make(chan ProviderResult, len(providerConfig.Providers))
@@ -32,7 +32,9 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 	}
 
 	for _, provider := range providerConfig.Providers {
+		wg.Add(1)
 		go func(p config.ProviderData) {
+			defer wg.Done()
 			mk, err := repository.New(p.LocalAddress, "telegram-api", "1017230619", "8728")
 			if err != nil {
 				log.Fatalln(err)
@@ -62,10 +64,8 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 		}(provider)
 	}
 
-	go func() {
-		time.Sleep(time.Second) // esperar un poco para asegurarnos de que todos los resultados se hayan enviado
-		close(resultsChan)
-	}()
+	wg.Wait()
+	close(resultsChan)
 
 	var message tgbotapi.MessageConfig
 	for ch := range resultsChan {

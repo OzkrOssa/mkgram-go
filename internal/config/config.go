@@ -35,7 +35,7 @@ type BtsConfig struct {
 
 func LoadProviderConfig() (ProviderConfig, error) {
 	log.Println("Reading provider configuration file")
-	filename, _ := filepath.Abs("../provider.config.yml")
+	filename, _ := filepath.Abs("provider.config.yml")
 	yamlFile, err := os.ReadFile(filename)
 	if err != nil {
 		return ProviderConfig{}, err
@@ -52,7 +52,7 @@ func LoadProviderConfig() (ProviderConfig, error) {
 
 func LoadBtsConfig() (BtsConfig, error) {
 	log.Println("Reading bts configuration file")
-	filename, _ := filepath.Abs("../bts.config.yml")
+	filename, _ := filepath.Abs("bts.config.yml")
 	yamlFile, err := os.ReadFile(filename)
 	if err != nil {
 		return BtsConfig{}, err

@@ -11,7 +11,7 @@ bts:
     wan: ether1
   - name: BTS_Blandon
     local_address: 10.99.99.10
-    wan: ether1
+    wan: ether2
   - name: BTS_Iberia
     local_address: 10.99.99.5
     wan: ether1

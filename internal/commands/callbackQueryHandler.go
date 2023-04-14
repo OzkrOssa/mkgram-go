@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"time"
+	"sync"
 
 	"github.com/OzkrOssa/mkgram-go/internal/config"
 	"github.com/OzkrOssa/mkgram-go/internal/repository"
@@ -22,6 +22,7 @@ type btsResult struct {
 }
 
 func (ch *CallbackQueryHandler) HandlerCallbackQuery(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
+	var wg sync.WaitGroup
 	var message tgbotapi.MessageConfig
 	btsConfig, err := config.LoadBtsConfig()
 	if err != nil {
@@ -31,7 +32,9 @@ func (ch *CallbackQueryHandler) HandlerCallbackQuery(bot *tgbotapi.BotAPI, updat
 	resultChan := make(chan btsResult, len(btsConfig.Bts))
 
 	for _, bts := range btsConfig.Bts {
+		wg.Add(1)
 		go func(b config.BtsData) {
+			defer wg.Done()
 			mk, err := repository.New(b.LocalAddress, os.Getenv("TELEGRAM_USER"), os.Getenv("TELEGRAM_PASSWORD"), "8728")
 			if err != nil {
 				log.Println("Login", err)
@@ -59,11 +62,8 @@ func (ch *CallbackQueryHandler) HandlerCallbackQuery(bot *tgbotapi.BotAPI, updat
 			}
 		}(bts)
 	}
-
-	go func() {
-		time.Sleep(time.Second) // esperar un poco para asegurarnos de que todos los resultados se hayan enviado
-		close(resultChan)
-	}()
+	wg.Wait()
+	close(resultChan)
 
 	for ch := range resultChan {
 		if update.CallbackQuery.Data == ch.Name {

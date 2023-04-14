@@ -40,4 +40,4 @@ bts:
     wan: ether1
   - name: BTS_SL_200
     local_address: 172.16.201.157
-    wan: ether2
+    wan: ether1

@@ -50,7 +50,7 @@ func (tm *TrafficMonitor) CheckTraffic() {
 			if err != nil {
 				log.Println(err)
 			}
-
+			log.Println("Current RX: ", utils.FormatSize(int64(Rx)))
 			switch {
 
 			case int64(Rx) > p.Saturation:

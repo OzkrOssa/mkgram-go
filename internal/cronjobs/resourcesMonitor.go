@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"time"
+	"sync"
 
 	"github.com/OzkrOssa/mkgram-go/internal/config"
 	"github.com/OzkrOssa/mkgram-go/internal/repository"
@@ -21,6 +21,7 @@ func NewResourcesMonitor(bot *tgbotapi.BotAPI) *ResourcesMonitor {
 }
 
 func (tm *ResourcesMonitor) CheckResources() {
+	var wg sync.WaitGroup
 	providerConfig, err := config.LoadProviderConfig()
 	resultsChanResources := make(chan repository.Resources, len(providerConfig.Providers))
 	if err != nil {
@@ -28,9 +29,9 @@ func (tm *ResourcesMonitor) CheckResources() {
 	}
 
 	for _, provider := range providerConfig.Providers {
-
+		wg.Add(1)
 		go func(p config.ProviderData) {
-
+			defer wg.Done()
 			mk, err := repository.New(p.LocalAddress, "telegram-api", "1017230619", "8728")
 
 			if err != nil {
@@ -59,10 +60,8 @@ func (tm *ResourcesMonitor) CheckResources() {
 			}
 		}(provider)
 	}
-	go func() {
-		time.Sleep(time.Second)
-		close(resultsChanResources)
-	}()
+	wg.Wait()
+	close(resultsChanResources)
 }
 
 func StartResourcesMonitorJob(bot *tgbotapi.BotAPI) {

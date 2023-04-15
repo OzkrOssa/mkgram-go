@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"time"
+	"sync"
 
 	"github.com/OzkrOssa/mkgram-go/internal/config"
 	"github.com/OzkrOssa/mkgram-go/internal/repository"
@@ -22,6 +22,7 @@ func NewTrafficMonitor(bot *tgbotapi.BotAPI) *TrafficMonitor {
 }
 
 func (tm *TrafficMonitor) CheckTraffic() {
+	var wg sync.WaitGroup
 	providerConfig, err := config.LoadProviderConfig()
 	resultsChanTraffic := make(chan repository.Traffic, len(providerConfig.Providers))
 	if err != nil {
@@ -29,9 +30,9 @@ func (tm *TrafficMonitor) CheckTraffic() {
 	}
 
 	for _, provider := range providerConfig.Providers {
-
+		wg.Add(1)
 		go func(p config.ProviderData) {
-
+			defer wg.Done()
 			mk, err := repository.New(p.LocalAddress, "telegram-api", "1017230619", "8728")
 
 			if err != nil {
@@ -66,10 +67,8 @@ func (tm *TrafficMonitor) CheckTraffic() {
 			}
 		}(provider)
 	}
-	go func() {
-		time.Sleep(time.Second)
-		close(resultsChanTraffic)
-	}()
+	wg.Wait()
+	close(resultsChanTraffic)
 }
 
 func StartTrafficMonitorJob(bot *tgbotapi.BotAPI) {

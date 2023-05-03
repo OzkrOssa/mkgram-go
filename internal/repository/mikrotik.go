@@ -18,6 +18,16 @@ type Traffic struct {
 	Tx string
 }
 
+type ChanResources struct {
+	Name string
+	Resources
+}
+type ChanTraffic struct {
+	Name       string
+	Saturation int64
+	Traffic
+}
+
 type MikrotikRepository interface {
 	GetTraffic(i string) (Traffic, error)
 	GetResources() (Resources, error)

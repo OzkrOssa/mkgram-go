@@ -24,7 +24,7 @@ func NewTrafficMonitor(bot *tgbotapi.BotAPI) *TrafficMonitor {
 func (tm *TrafficMonitor) CheckTraffic() {
 	var wg sync.WaitGroup
 	providerConfig, err := config.LoadProviderConfig()
-	resultsChanTraffic := make(chan repository.Traffic, len(providerConfig.Providers))
+	resultsChanTraffic := make(chan repository.ChanTraffic, len(providerConfig.Providers))
 	if err != nil {
 		log.Println(err)
 	}
@@ -44,7 +44,15 @@ func (tm *TrafficMonitor) CheckTraffic() {
 				log.Println(err)
 			}
 
-			resultsChanTraffic <- traffic
+			result := repository.ChanTraffic{
+				Name:       p.Name,
+				Saturation: p.Saturation,
+				Traffic: repository.Traffic{
+					Rx: traffic.Rx,
+					Tx: traffic.Tx,
+				},
+			}
+			resultsChanTraffic <- result
 
 			Rx, err := strconv.Atoi(traffic.Rx)
 
@@ -52,30 +60,36 @@ func (tm *TrafficMonitor) CheckTraffic() {
 				log.Println(err)
 			}
 			log.Println("Current RX: ", utils.FormatSize(int64(Rx)))
-			switch {
-
-			case int64(Rx) > p.Saturation:
-				textMessage := fmt.Sprintf("⚠️ <b><i>%s</i></b> supero el umbral de trafico de <b><i>%s</i></b> ⚠️", p.Name, utils.FormatSize(p.Saturation))
-				message := tgbotapi.NewMessage(config.GroupChatID, textMessage)
-				message.ParseMode = "Html"
-				tm.bot.Send(message)
-			case int64(Rx) < 100000000:
-				textMessage := fmt.Sprintf("❌ El Trafico cayo a <b><i>%s</i></b> en <b><i>%s</i></b> ❌", utils.FormatSize(int64(Rx)), p.Name)
-				message := tgbotapi.NewMessage(config.GroupChatID, textMessage)
-				message.ParseMode = "Html"
-				tm.bot.Send(message)
-			}
 		}(provider)
 	}
 	wg.Wait()
 	close(resultsChanTraffic)
+	for ch := range resultsChanTraffic {
+		Rx, err := strconv.Atoi(ch.Rx)
+
+		if err != nil {
+			log.Println(err)
+		}
+		switch {
+		case int64(Rx) > ch.Saturation:
+			textMessage := fmt.Sprintf("⚠️ <b><i>%s</i></b> supero el umbral de trafico de <b><i>%s</i></b> ⚠️", ch.Name, utils.FormatSize(ch.Saturation))
+			message := tgbotapi.NewMessage(config.GroupChatID, textMessage)
+			message.ParseMode = "Html"
+			tm.bot.Send(message)
+		case int64(Rx) < 100000000:
+			textMessage := fmt.Sprintf("❌ El Trafico cayo a <b><i>%s</i></b> en <b><i>%s</i></b> ❌", utils.FormatSize(int64(Rx)), ch.Name)
+			message := tgbotapi.NewMessage(config.GroupChatID, textMessage)
+			message.ParseMode = "Html"
+			tm.bot.Send(message)
+		}
+	}
 }
 
 func StartTrafficMonitorJob(bot *tgbotapi.BotAPI) {
 	log.Println("Traffic Monitor Job Started")
 	cron := cron.New()
 	monitor := NewTrafficMonitor(bot)
-	cron.AddFunc("* * * * *", monitor.CheckTraffic)
+	cron.AddFunc("* 6-23 * * *", monitor.CheckTraffic)
 	cron.Start()
 
 }

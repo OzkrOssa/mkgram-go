@@ -10,7 +10,7 @@ import (
 
 var BotToken = os.Getenv("TELEGRAM_BOT_TOKEN")
 
-const GroupChatID int64 = -865707097
+const GroupChatID int64 = -874165723
 
 type ProviderData struct {
 	Name         string `yaml:"name"`

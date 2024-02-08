@@ -32,7 +32,7 @@ func (tm *ResourcesMonitor) CheckResources() {
 		wg.Add(1)
 		go func(p config.ProviderData) {
 			defer wg.Done()
-			mk, err := repository.New(p.LocalAddress, "telegram-api", "1017230619", "8728")
+			mk, err := repository.New(p.LocalAddress, "admin", "", "8728")
 
 			if err != nil {
 				log.Println(err)

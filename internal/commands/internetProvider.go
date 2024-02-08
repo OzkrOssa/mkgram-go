@@ -35,7 +35,7 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 		wg.Add(1)
 		go func(p config.ProviderData) {
 			defer wg.Done()
-			mk, err := repository.New(p.LocalAddress, "telegram-api", "1017230619", "8728")
+			mk, err := repository.New(p.LocalAddress, "admin", "", "8728")
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -74,7 +74,7 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 		rx, _ := strconv.Atoi(ch.Traffic.Rx)
 
 		log.Println(ch.Name, ch.Resources, ch.Traffic)
-		textMessage := fmt.Sprintf("<b>%s</b>\n<b><i>Cpu:</i></b> %s <b><i>Uptime:</i></b> %s\n<b><i>Rx:</i></b> %s <b><i>Tx:</i></b> %s", ch.Name, ch.Resources.Cpu, ch.Resources.Uptime, utils.FormatSize(int64(rx)), utils.FormatSize(int64(tx)))
+		textMessage := fmt.Sprintf("<b>%s</b>\n<b><i>Cpu:</i></b> %s <b><i>Uptime:</i></b> %s\n<b><i>Tx:</i></b> %s <b><i>Rx:</i></b> %s", ch.Name, ch.Resources.Cpu, ch.Resources.Uptime, utils.FormatSize(int64(tx)), utils.FormatSize(int64(rx)))
 		message = tgbotapi.NewMessage(update.Message.Chat.ID, textMessage)
 		message.ParseMode = "Html"
 		_, err = bot.Send(message)

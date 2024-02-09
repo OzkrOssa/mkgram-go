@@ -39,10 +39,6 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 			if err != nil {
 				log.Fatalln(err)
 			}
-			identity, err := mk.GetIndentity()
-			if err != nil {
-				log.Fatalln(err)
-			}
 
 			resources, err := mk.GetResources()
 			if err != nil {
@@ -56,7 +52,7 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 			}
 
 			resultsChan <- ProviderResult{
-				Name:      identity,
+				Name:      p.Name,
 				Resources: resources,
 				Traffic:   traffic,
 			}
@@ -78,6 +74,9 @@ func (ip *internetProviderCommand) Execute(bot *tgbotapi.BotAPI, update *tgbotap
 		message = tgbotapi.NewMessage(update.Message.Chat.ID, textMessage)
 		message.ParseMode = "Html"
 		_, err = bot.Send(message)
+		if err != nil {
+			return err
+		}
 	}
 
 	return err
